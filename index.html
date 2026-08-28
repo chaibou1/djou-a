@@ -1,0 +1,2263 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Les Épices de Djouma | Maison d'Épices Rares & Haute Gastronomie</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,800;1,500;1,700&family=Cinzel:wght@600;700;900&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            paprika: {
+              DEFAULT: '#C2593F',
+              50: '#FBF3F0',
+              100: '#F7E4DE',
+              200: '#EFC7BC',
+              300: '#E4A493',
+              400: '#D57C66',
+              500: '#C2593F',
+              600: '#A9432B',
+              700: '#8A321F',
+              800: '#6C2618',
+              900: '#4E1A10'
+            },
+            turmeric: {
+              DEFAULT: '#E0A93B',
+              50: '#FEFAF0',
+              100: '#FDF3DC',
+              200: '#FBE6B4',
+              300: '#F8D687',
+              400: '#F0BE53',
+              500: '#E0A93B',
+              600: '#C28B23',
+              700: '#996C15',
+              800: '#73500E',
+              900: '#4D3408'
+            },
+            cardamom: {
+              DEFAULT: '#3F5E4D',
+              50: '#F2F6F4',
+              100: '#E2EBE5',
+              200: '#C4D5CB',
+              300: '#A1BCAD',
+              400: '#6E9880',
+              500: '#3F5E4D',
+              600: '#324C3E',
+              700: '#25392E',
+              800: '#19261F',
+              900: '#0C130F'
+            },
+            saffron: '#E05A2B',
+            sand: {
+              50: '#FDFBF7',
+              100: '#FBF8F2',
+              200: '#F4ECE0',
+              300: '#E9DDCB',
+              400: '#DAC9B1'
+            },
+            charcoal: {
+              900: '#141211',
+              800: '#1B1715',
+              700: '#2A2421',
+              600: '#3E3632'
+            }
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            serif: ['"Playfair Display"', 'serif'],
+            cinzel: ['"Cinzel"', 'serif']
+          }
+        }
+      }
+    };
+  </script>
+
+  <!-- GSAP & Plugins -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+  <!-- React 18 & Babel for Standalone Live Preview -->
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    body {
+      background-color: #FBF8F2;
+      color: #1B1715;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      overflow-x: hidden;
+    }
+    .grain-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      opacity: 0.035;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+      z-index: 99;
+    }
+    .gold-shimmer {
+      background: linear-gradient(135deg, #E0A93B 0%, #FFF3D6 50%, #C28B23 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .spice-shadow {
+      box-shadow: 0 20px 40px -15px rgba(194, 89, 63, 0.15);
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #F4ECE0;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #C2593F;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body class="bg-sand-100 text-charcoal-800 antialiased selection:bg-paprika selection:text-white">
+
+  <!-- Texture de grain subtile pour l'effet artisanal -->
+  <div class="grain-overlay"></div>
+
+  <!-- Conteneur racine React -->
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect, useRef, useMemo } = React;
+
+    // --- DONNÉES DU CATALOGUE & RECETTES ---
+    const INITIAL_SPICES = [
+      {
+        id: "melange-signature-djouma",
+        name: "Mélange Signature Djouma",
+        subtitle: "Trésor Aromatique d'Éthiopie & Zanzibar",
+        category: "Mélanges Signatures",
+        origin: "Éthiopie / Forêts Primaires",
+        price: 14.50,
+        unit: "Pot en verre fumé 80g",
+        scoville: 2,
+        intensity: 5,
+        inStock: 42,
+        isFeatured: true,
+        color: "#C2593F",
+        accentColor: "#E0A93B",
+        badge: "Cuvée Exclusive",
+        image: "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=700&q=80",
+        description: "Le chef-d'œuvre de la maison Djouma. Un accord envoûtant de cardamome noire fumée au bois d'acacia, baies de la passion de Kaffa, kororima sauvage et zeste de combava sauvage séché au soleil.",
+        aromaticPyramid: {
+          top: ["Zeste de Combava", "Poivre Timut", "Fleur d'Oranger"],
+          heart: ["Kororima Sauvage", "Cardamome Noire Fumée", "Gingembre Bleu"],
+          base: ["Bois d'Acacia", "Cannelle de Ceylan", "Fève Tonka Sauvage"]
+        },
+        pairings: ["Tajines & mijotés lents", "Canard rôti au miel", "Chocolat grand cru 70%", "Légumes racines rôtis"],
+        usageTips: "Torréfier 30 secondes à sec dans une poêle chaude avant de piler grossièrement au mortier.",
+        harvestDate: "Octobre 2025 - Récolte manuelle"
+      },
+      {
+        id: "poivre-kampot-noir-reserve",
+        name: "Poivre Noir de Kampot IGP Réserve",
+        subtitle: "Grand Cru d'Asie du Sud-Est",
+        category: "Poivres d'Exception",
+        origin: "Cambodge - Région de Kampot",
+        price: 18.00,
+        unit: "Pot en verre 70g",
+        scoville: 3,
+        intensity: 4,
+        inStock: 28,
+        isFeatured: true,
+        color: "#2C2523",
+        accentColor: "#C2593F",
+        badge: "Grand Cru IGP",
+        image: "https://images.unsplash.com/photo-1509358271058-acd22cc93898?auto=format&fit=crop&w=700&q=80",
+        description: "Considéré par les grands chefs comme le meilleur poivre noir au monde. Arômes complexes de menthe poivrée, d'eucalyptus, avec une touche fruitée de poire et de jasmin.",
+        aromaticPyramid: {
+          top: ["Eucalyptus frais", "Menthe verte", "Fleur de jasmin"],
+          heart: ["Agrumes confits", "Résine noble", "Poire sauvage"],
+          base: ["Notes boisées chaudes", "Cuir tanné"]
+        },
+        pairings: ["Bœuf Wagyu", "Thon rouge mi-cuit", "Poires pochées au vin rouge", "Fromages de chèvre affinés"],
+        usageTips: "À concasser au moulin au tout dernier moment sur le plat chaud.",
+        harvestDate: "Mars 2025 - Séchage solaire traditionnel"
+      },
+      {
+        id: "safran-taliouine-pur",
+        name: "Or Rouge de Taliouine - Safran Pur",
+        subtitle: "Pistils Entiers Catégorie 1 Supérieure",
+        category: "Épices Rares",
+        origin: "Anti-Atlas, Maroc (Altitude 1500m)",
+        price: 28.50,
+        unit: "Flacon hermétique 2g",
+        scoville: 0,
+        intensity: 5,
+        inStock: 15,
+        isFeatured: true,
+        color: "#E05A2B",
+        accentColor: "#E0A93B",
+        badge: "Or Rouge",
+        image: "https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&w=700&q=80",
+        description: "Récolté à l'aube fleur par fleur sur les contreforts du mont Sirwa. Un taux de safranal et de crocine exceptionnel conférant une couleur or profond et un parfum d'une noblesse incomparable.",
+        aromaticPyramid: {
+          top: ["Miel de montagne", "Foin coupé", "Fleur de crocus"],
+          heart: ["Iode délicat", "Cuir fin", "Écorce douce"],
+          base: ["Terre chaude", "Amande amère"]
+        },
+        pairings: ["Risotto alla Milanese", "Bouillabaisse royale", "Crème brûlée safranée", "Paella artisanale"],
+        usageTips: "Faire infuser les pistils dans de l'eau tiède ou du bouillon 20 minutes avant incorporation.",
+        harvestDate: "Novembre 2025 - Cueillette de 6h du matin"
+      },
+      {
+        id: "curcuma-alep-sauvage",
+        name: "Curcuma Sauvage de Wayanad",
+        subtitle: "Riche en Curcumine Native (> 7%)",
+        category: "Poudres & Terroirs",
+        origin: "Kerala, Inde",
+        price: 9.50,
+        unit: "Sachet Kraft Hermétique 100g",
+        scoville: 0,
+        intensity: 4,
+        inStock: 60,
+        isFeatured: false,
+        color: "#E0A93B",
+        accentColor: "#C2593F",
+        badge: "Curcumine 7.2%",
+        image: "https://images.unsplash.com/photo-1615485290172-e1c0c6607e44?auto=format&fit=crop&w=700&q=80",
+        description: "Un curcuma d'une vibrance solaire éclatante, issu de rhizomes ancestraux cultivés en agroforesterie sur les sols volcaniques du Kerala.",
+        aromaticPyramid: {
+          top: ["Orange amère", "Gingembre frais"],
+          heart: ["Terre cuite", "Muscade douce"],
+          base: ["Bois précieux", "Curcuma torréfié"]
+        },
+        pairings: ["Golden Latte / Lait d'or", "Currys de légumes", "Poisson blanc en papillote", "Riz basmati parfumé"],
+        usageTips: "Associer à une pointe de poivre noir et d'huile d'olive pour décupler la biodisponibilité de la curcumine.",
+        harvestDate: "Janvier 2026"
+      },
+      {
+        id: "piment-espelette-fume",
+        name: "Piment Doux Fumé au Bois de Chêne",
+        subtitle: "Douceur Fumée & Chaleur Suave",
+        category: "Piments Nobles",
+        origin: "Pays Basque / Terroirs du Sud",
+        price: 11.00,
+        unit: "Pot en verre fumé 75g",
+        scoville: 3,
+        intensity: 3,
+        inStock: 35,
+        isFeatured: false,
+        color: "#9E2A2B",
+        accentColor: "#E0A93B",
+        badge: "Fumage Artisanal",
+        image: "https://images.unsplash.com/photo-1588252303782-cb80119abd6d?auto=format&fit=crop&w=700&q=80",
+        description: "Piments cueillis à pleine maturité rouge carmin, lentement fumés pendant 5 jours au bois de chêne séculaire selon un savoir-faire ancestral.",
+        aromaticPyramid: {
+          top: ["Poivron rouge confit", "Fumée de chêne"],
+          heart: ["Tomate séchée", "Paprika doux"],
+          base: ["Caramel brun", "Feuilles sèches"]
+        },
+        pairings: ["Gambas flambées", "Pommes de terre sautées", "Sauces barbecue maison", "Œufs pochés"],
+        usageTips: "Saupoudrer en finition ou mélanger dans une huile d'olive pour badigeonner les viandes.",
+        harvestDate: "Septembre 2025"
+      },
+      {
+        id: "cardamome-verte-guatemala",
+        name: "Cardamome Verte Royale en Cosses",
+        subtitle: "Gousses Jumbo Extra Vertes",
+        category: "Épices Rares",
+        origin: "Alta Verapaz, Guatemala",
+        price: 16.50,
+        unit: "Pot en verre 60g",
+        scoville: 0,
+        intensity: 5,
+        inStock: 22,
+        isFeatured: true,
+        color: "#3F5E4D",
+        accentColor: "#E0A93B",
+        badge: "Sélection Royale",
+        image: "https://images.unsplash.com/photo-1599940824399-b87987ceb72a?auto=format&fit=crop&w=700&q=80",
+        description: "Des cosses géantes d'un vert jade éclatant renfermant des graines noires gorgées d'huiles essentielles camphrées, citronnées et florales.",
+        aromaticPyramid: {
+          top: ["Citronnelle", "Camphre doux", "Bergamote"],
+          heart: ["Menthe poivrée", "Eucalyptus", "Pin sylvestre"],
+          base: ["Résine noble", "Musc végétal"]
+        },
+        pairings: ["Café arabe traditionnel", "Pâtisseries orientales", "Currys indiens", "Riz pilaf aux fruits secs"],
+        usageTips: "Écraser délicatement la cosse sous le plat du couteau pour libérer les graines aromatiques.",
+        harvestDate: "Décembre 2025"
+      },
+      {
+        id: "zaatar-artisan-levant",
+        name: "Za'atar Royal Sauvage & Sumac",
+        subtitle: "Mélange Traditionnel du Levant",
+        category: "Mélanges Signatures",
+        origin: "Mont-Liban & Vallée de la Bekaa",
+        price: 12.50,
+        unit: "Sachet Kraft Hermétique 90g",
+        scoville: 0,
+        intensity: 4,
+        inStock: 50,
+        isFeatured: false,
+        color: "#5A6B48",
+        accentColor: "#C2593F",
+        badge: "Recette Ancestrale",
+        image: "https://images.unsplash.com/photo-1532336414038-cf19250c5757?auto=format&fit=crop&w=700&q=80",
+        description: "Thym sauvage séché à l'ombre (Origanum syriacum), sumac pourpre acidulé, graines de sésame blanc doré et fleur de sel de mer.",
+        aromaticPyramid: {
+          top: ["Sumac acidulé", "Zeste de citron", "Thym frais"],
+          heart: ["Sésame grillé", "Marjolaine sauvage"],
+          base: ["Notes minérales", "Herbacé chaud"]
+        },
+        pairings: ["Pain pita tiède & huile d'olive", "Labneh frais", "Salade fattoush", "Poulet mariné au four"],
+        usageTips: "Mélanger à parts égales avec une huile d'olive vierge extra de première pression pour créer un dip onctueux.",
+        harvestDate: "Août 2025"
+      },
+      {
+        id: "poivre-voatsiperifery-madagascar",
+        name: "Poivre Sauvage Voatsiperifery",
+        subtitle: "Baies à Queue des Forêts Malgaches",
+        category: "Poivres d'Exception",
+        origin: "Madagascar / Forêts Tropicales",
+        price: 19.50,
+        unit: "Pot en verre 50g",
+        scoville: 2,
+        intensity: 5,
+        inStock: 18,
+        isFeatured: true,
+        color: "#3B322C",
+        accentColor: "#3F5E4D",
+        badge: "Cueillette Sauvage",
+        image: "https://images.unsplash.com/photo-1546548970-71785318a17b?auto=format&fit=crop&w=700&q=80",
+        description: "Cueillie à la cime d'arbres géants pouvant atteindre 20 mètres de hauteur. Une baie rarissime au goût boisé, floral et délicatement terreux.",
+        aromaticPyramid: {
+          top: ["Notes florales", "Fleur d'oranger", "Agrumes doux"],
+          heart: ["Bois exotique", "Humus frais", "Girofle doux"],
+          base: ["Chaleur longue et veloutée"]
+        },
+        pairings: ["Foie gras poêlé", "Tartare de fraises & basilic", "Magret de canard", "Fondant au chocolat noir"],
+        usageTips: "Moudre sur les desserts fruités ou les viandes rouges nobles.",
+        harvestDate: "Janvier 2026"
+      }
+    ];
+
+    const RECIPES = [
+      {
+        id: "tajine-agneau-djouma",
+        title: "Tajine d'Agneau Fondant aux Pruneaux & Mélange Djouma",
+        category: "Plats de Fête",
+        difficulty: "Intermédiaire",
+        prepTime: "25 min",
+        cookTime: "1h 45 min",
+        servings: 4,
+        featuredSpiceId: "melange-signature-djouma",
+        featuredSpiceName: "Mélange Signature Djouma",
+        image: "https://images.unsplash.com/photo-1541518763669-27fef04b14ea?auto=format&fit=crop&w=800&q=80",
+        description: "Un plat d'anthologie où la tendreté de l'épaule d'agneau confite rencontre les notes fumées et chaleureuses du mélange signature de Djouma.",
+        ingredients: [
+          "800g d'épaule d'agneau coupée en morceaux",
+          "2 cuillères à soupe de Mélange Signature Djouma",
+          "150g de pruneaux d'Agen moelleux",
+          "50g d'amandes effilées toastées",
+          "2 oignons jaunes émincés finement",
+          "3 cuillères à soupe d'huile d'olive vierge extra",
+          "1 cuillère à soupe de miel de fleurs sauvages",
+          "1 bâton de cannelle de Ceylan",
+          "Sel fin de Guérande"
+        ],
+        steps: [
+          "Dans un plat à tajine ou une cocotte en fonte, faire chauffer l'huile d'olive. Faire dorer les morceaux d'agneau sur toutes les faces.",
+          "Ajouter les oignons émincés et faire suer 5 minutes jusqu'à ce qu'ils deviennent translucides.",
+          "Saupoudrer généreusement avec les 2 cuillères de Mélange Signature Djouma et le bâton de cannelle. Laisser torréfier 1 minute.",
+          "Mouiller à hauteur avec de l'eau tiède ou un bouillon doux. Couvrir et laisser mijoter à feu très doux pendant 1h15.",
+          "Ajouter les pruneaux et la cuillère de miel. Poursuivre la cuisson à découvert 30 minutes jusqu'à obtenir une sauce sirupeuse.",
+          "Parsemer d'amandes effilées grillées avant de servir avec une semoule fine de blé dur."
+        ],
+        chefTip: "Préparez ce tajine la veille : les huiles aromatiques de la cardamome noire et du combava pénètrent encore plus intimement les fibres de la viande au repos."
+      },
+      {
+        id: "risotto-safran-taliouine",
+        title: "Risotto Crémeux à l'Or Rouge de Taliouine & Saint-Jacques",
+        category: "Haute Gastronomie",
+        difficulty: "Avancé",
+        prepTime: "20 min",
+        cookTime: "25 min",
+        servings: 4,
+        featuredSpiceId: "safran-taliouine-pur",
+        featuredSpiceName: "Safran Pur de Taliouine",
+        image: "https://images.unsplash.com/photo-1633964913295-ceb43826e7c9?auto=format&fit=crop&w=800&q=80",
+        description: "Une texture veloutée rehaussée par la couleur solaire et la signature aromatique du safran d'altitude marocain, couronnée de noix de Saint-Jacques nacrées.",
+        ingredients: [
+          "320g de riz Carnaroli ou Arborio",
+          "15 à 20 pistils de Safran Pur de Taliouine",
+          "12 noix de Saint-Jacques fraîches",
+          "1 litre de bouillon de volaille frémissant",
+          "1 échalote ciselée",
+          "10cl de vin blanc sec",
+          "60g de Parmigiano Reggiano 24 mois râpé",
+          "40g de beurre doux froid",
+          "Fleur de sel et poivre blanc"
+        ],
+        steps: [
+          "Faire infuser les pistils de safran dans une louche de bouillon tiède pendant 20 minutes.",
+          "Dans une sauteuse, faire suer l'échalote avec une noix de beurre, puis nacrer le riz 2 minutes.",
+          "Déglacer au vin blanc et laisser évaporer complètement.",
+          "Ajouter le bouillon chaud louche par louche en remuant constamment pendant 16 à 18 minutes.",
+          "À mi-cuisson, incorporer l'infusion de safran avec ses pistils.",
+          "Hors du feu, réaliser la mantecatura avec le beurre froid et le parmesan râpé.",
+          "Snacker les Saint-Jacques 1 minute par face dans une poêle très chaude avec du beurre clarifié, puis dresser sur le risotto."
+        ],
+        chefTip: "Ne jetez jamais les pistils infusés : laissez-les dans le risotto pour témoigner de l'authenticité de l'épice brute."
+      },
+      {
+        id: "poires-pochees-kampot",
+        title: "Poires Confites au Vin Rouge & Poivre Noir de Kampot",
+        category: "Desserts & Douceurs",
+        difficulty: "Facile",
+        prepTime: "15 min",
+        cookTime: "40 min",
+        servings: 4,
+        featuredSpiceId: "poivre-kampot-noir-reserve",
+        featuredSpiceName: "Poivre Noir de Kampot IGP",
+        image: "https://images.unsplash.com/photo-1514944298350-f8602b92f703?auto=format&fit=crop&w=800&q=80",
+        description: "L'alliance subtile entre la douceur des poires William pochées et les notes mentholées, fruitées et florales du grand cru de Kampot.",
+        ingredients: [
+          "4 poires Williams fermes",
+          "1 cuillère à café de grains de Poivre Noir de Kampot concassés",
+          "75cl de vin rouge fruité",
+          "120g de sucre de canne non raffiné",
+          "1 gousse de vanille Bourbon fendue",
+          "1 étoile de badiane",
+          "Zeste d'une orange bio"
+        ],
+        steps: [
+          "Éplucher les poires en conservant la queue.",
+          "Dans une casserole, porter à frémissement le vin rouge avec le sucre, la vanille, la badiane, le zeste d'orange et le poivre de Kampot concassé.",
+          "Plonger les poires dans le vin frémissant, couvrir et laisser pocher 30 à 35 minutes.",
+          "Retirer les poires et faire réduire le sirop de vin de moitié.",
+          "Servir tiède ou frais, nappé du sirop réduit et d'un tour de moulin à poivre."
+        ],
+        chefTip: "Le poivre de Kampot apporte une fraîcheur mentholée qui sublime le fruit sans aucune amertume piquante."
+      }
+    ];
+
+    const INITIAL_ORDERS = [
+      {
+        id: "DJ-2026-8891",
+        customer: {
+          name: "Éléonore de Montmirail",
+          email: "eleonore.montmirail@gastronomie.fr",
+          phone: "+33 6 42 18 90 23",
+          address: "14 Rue de Rivoli",
+          city: "Paris",
+          postalCode: "75001"
+        },
+        items: [
+          { spiceId: "melange-signature-djouma", name: "Mélange Signature Djouma", price: 14.50, quantity: 2, format: "Pot en verre fumé 80g" },
+          { spiceId: "safran-taliouine-pur", name: "Or Rouge de Taliouine - Safran Pur", price: 28.50, quantity: 1, format: "Flacon hermétique 2g" }
+        ],
+        packaging: "Coffret Bois d'Acacia & Lin Gravé (+5.00€)",
+        packagingFee: 5.00,
+        shippingFee: 4.90,
+        subtotal: 57.50,
+        total: 67.40,
+        status: "En préparation",
+        createdAt: "2026-08-28T14:22:00Z",
+        notes: "Commande cadeau pour anniversaire gastronomique."
+      },
+      {
+        id: "DJ-2026-8890",
+        customer: {
+          name: "Chef Alexandre Vianney",
+          email: "a.vianney@restaurant-letoile.com",
+          phone: "+33 6 99 82 11 05",
+          address: "8 Quai des Célestins",
+          city: "Lyon",
+          postalCode: "69002"
+        },
+        items: [
+          { spiceId: "poivre-kampot-noir-reserve", name: "Poivre Noir de Kampot IGP Réserve", price: 18.00, quantity: 3, format: "Pot en verre 70g" },
+          { spiceId: "cardamome-verte-guatemala", name: "Cardamome Verte Royale en Cosses", price: 16.50, quantity: 2, format: "Pot en verre 60g" }
+        ],
+        packaging: "Pochon en Lin Écologique",
+        packagingFee: 0.00,
+        shippingFee: 0.00,
+        subtotal: 87.00,
+        total: 87.00,
+        status: "Expédiée",
+        trackingNumber: "LP892304918FR",
+        createdAt: "2026-08-27T09:15:00Z",
+        notes: "Livraison restaurant avant le service de midi."
+      },
+      {
+        id: "DJ-2026-8889",
+        customer: {
+          name: "Sabine Leroy",
+          email: "sabine.leroy@artisanat.be",
+          phone: "+32 470 12 34 56",
+          address: "25 Avenue Louise",
+          city: "Bruxelles",
+          postalCode: "1050"
+        },
+        items: [
+          { spiceId: "curcuma-alep-sauvage", name: "Curcuma Sauvage de Wayanad", price: 9.50, quantity: 2, format: "Sachet Kraft Hermétique 100g" },
+          { spiceId: "zaatar-artisan-levant", name: "Za'atar Royal Sauvage & Sumac", price: 12.50, quantity: 1, format: "Sachet Kraft Hermétique 90g" }
+        ],
+        packaging: "Pochon en Lin Écologique",
+        packagingFee: 0.00,
+        shippingFee: 6.90,
+        subtotal: 31.50,
+        total: 38.40,
+        status: "Livrée",
+        createdAt: "2026-08-25T17:40:00Z",
+        notes: "Client régulier."
+      }
+    ];
+
+    // --- CANVAS PARTICULES D'ÉPICES ---
+    const SpiceParticleBackground = () => {
+      const canvasRef = useRef(null);
+
+      useEffect(() => {
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        let animationFrameId;
+
+        let width = (canvas.width = window.innerWidth);
+        let height = (canvas.height = window.innerHeight);
+
+        const handleResize = () => {
+          width = canvas.width = window.innerWidth;
+          height = canvas.height = window.innerHeight;
+        };
+        window.addEventListener('resize', handleResize);
+
+        const particles = [];
+        const colors = ['#C2593F', '#E0A93B', '#E05A2B', '#3F5E4D', '#D57C66'];
+
+        for (let i = 0; i < 45; i++) {
+          particles.push({
+            x: Math.random() * width,
+            y: Math.random() * height,
+            radius: Math.random() * 2.5 + 1,
+            color: colors[Math.floor(Math.random() * colors.length)],
+            vx: (Math.random() - 0.5) * 0.4,
+            vy: Math.random() * 0.6 + 0.2,
+            opacity: Math.random() * 0.4 + 0.15,
+            spin: Math.random() * Math.PI * 2,
+            vSpin: (Math.random() - 0.5) * 0.02
+          });
+        }
+
+        const render = () => {
+          ctx.clearRect(0, 0, width, height);
+
+          particles.forEach((p) => {
+            p.x += p.vx;
+            p.y += p.vy;
+            p.spin += p.vSpin;
+
+            if (p.y > height + 10) {
+              p.y = -10;
+              p.x = Math.random() * width;
+            }
+            if (p.x < -10) p.x = width + 10;
+            if (p.x > width + 10) p.x = -10;
+
+            ctx.save();
+            ctx.translate(p.x, p.y);
+            ctx.rotate(p.spin);
+            ctx.globalAlpha = p.opacity;
+            ctx.fillStyle = p.color;
+
+            // Forme organique (grain d'épice ovale ou losange)
+            ctx.beginPath();
+            ctx.ellipse(0, 0, p.radius * 1.5, p.radius, p.spin, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+          });
+
+          animationFrameId = requestAnimationFrame(render);
+        };
+
+        render();
+
+        return () => {
+          window.removeEventListener('resize', handleResize);
+          cancelAnimationFrame(animationFrameId);
+        };
+      }, []);
+
+      return <canvas ref={canvasRef} className="fixed inset-0 pointer-events-none z-0 opacity-60" />;
+    };
+
+    // --- APPLICATION PRINCIPALE REACT ---
+    function App() {
+      const [currentView, setCurrentView] = useState('home'); // 'home' | 'catalog' | 'recipes' | 'checkout' | 'admin' | 'design-system'
+      const [spices, setSpices] = useState(INITIAL_SPICES);
+      const [orders, setOrders] = useState(INITIAL_ORDERS);
+      const [cart, setCart] = useState([]);
+      const [isCartOpen, setIsCartOpen] = useState(false);
+      const [selectedSpice, setSelectedSpice] = useState(null);
+      const [toast, setToast] = useState(null);
+
+      // Filtres catalogue
+      const [searchQuery, setSearchQuery] = useState('');
+      const [selectedCategory, setSelectedCategory] = useState('Tous');
+      const [selectedOrigin, setSelectedOrigin] = useState('Toutes');
+      const [maxScoville, setMaxScoville] = useState(5);
+
+      // Notification Toast
+      const showToast = (message, type = 'success') => {
+        setToast({ message, type });
+        setTimeout(() => setToast(null), 3500);
+      };
+
+      // Gestion du panier
+      const addToCart = (spice, quantity = 1, format = null) => {
+        const itemFormat = format || spice.unit;
+        const cartItemId = `${spice.id}-${itemFormat}`;
+
+        setCart((prev) => {
+          const existing = prev.find((item) => item.cartItemId === cartItemId);
+          if (existing) {
+            return prev.map((item) =>
+              item.cartItemId === cartItemId
+                ? { ...item, quantity: item.quantity + quantity }
+                : item
+            );
+          }
+          return [
+            ...prev,
+            {
+              cartItemId,
+              spiceId: spice.id,
+              name: spice.name,
+              price: spice.price,
+              format: itemFormat,
+              quantity,
+              color: spice.color,
+              image: spice.image
+            }
+          ];
+        });
+
+        showToast(`Ajouté au panier : ${spice.name} (x${quantity})`);
+      };
+
+      const updateCartQuantity = (cartItemId, delta) => {
+        setCart((prev) =>
+          prev
+            .map((item) => {
+              if (item.cartItemId === cartItemId) {
+                const newQ = item.quantity + delta;
+                return newQ > 0 ? { ...item, quantity: newQ } : null;
+              }
+              return item;
+            })
+            .filter(Boolean)
+        );
+      };
+
+      const removeFromCart = (cartItemId) => {
+        setCart((prev) => prev.filter((item) => item.cartItemId !== cartItemId));
+      };
+
+      const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+      const cartSubtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
+      // Catégories uniques
+      const categories = ['Tous', ...new Set(spices.map((s) => s.category))];
+      const origins = ['Toutes', ...new Set(spices.map((s) => s.origin.split(' - ')[0].split(' / ')[0]))];
+
+      // Épices filtrées
+      const filteredSpices = useMemo(() => {
+        return spices.filter((spice) => {
+          const matchCat = selectedCategory === 'Tous' || spice.category === selectedCategory;
+          const matchSearch =
+            searchQuery === '' ||
+            spice.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            spice.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            spice.origin.toLowerCase().includes(searchQuery.toLowerCase());
+          const matchOrigin =
+            selectedOrigin === 'Toutes' || spice.origin.includes(selectedOrigin);
+          const matchScoville = spice.scoville <= maxScoville;
+
+          return matchCat && matchSearch && matchOrigin && matchScoville;
+        });
+      }, [spices, selectedCategory, searchQuery, selectedOrigin, maxScoville]);
+
+      // GSAP Animations à l'initialisation
+      useEffect(() => {
+        gsap.fromTo(
+          '.nav-brand',
+          { opacity: 0, y: -20 },
+          { opacity: 1, y: 0, duration: 1, ease: 'power3.out' }
+        );
+      }, []);
+
+      return (
+        <div className="min-h-screen flex flex-col relative">
+          <SpiceParticleBackground />
+
+          {/* Toast Notification */}
+          {toast && (
+            <div className="fixed bottom-6 right-6 z-50 bg-charcoal-900 text-sand-50 px-6 py-4 rounded-xl shadow-2xl flex items-center gap-3 border border-turmeric/40 animate-bounce">
+              <span className="text-turmeric text-lg">🌿</span>
+              <p className="font-medium text-sm">{toast.message}</p>
+            </div>
+          )}
+
+          {/* --- NAVBAR --- */}
+          <header className="sticky top-0 z-40 bg-sand-100/90 backdrop-blur-md border-b border-sand-300/80 transition-all duration-300">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+              
+              {/* Logo Moderne & Emblème Djouma */}
+              <div
+                onClick={() => setCurrentView('home')}
+                className="nav-brand flex items-center gap-3 cursor-pointer group"
+              >
+                <div className="w-11 h-11 rounded-full bg-gradient-to-tr from-paprika to-turmeric flex items-center justify-center text-white shadow-md group-hover:scale-105 transition-transform">
+                  <span className="font-cinzel text-xl font-bold tracking-tighter">D</span>
+                </div>
+                <div>
+                  <span className="font-cinzel text-lg md:text-xl font-bold tracking-widest text-charcoal-900 block leading-tight">
+                    LES ÉPICES DE DJOUMA
+                  </span>
+                  <span className="text-[10px] tracking-[0.25em] text-paprika-600 font-semibold uppercase block">
+                    Maison d'Artisanat Gastronomique
+                  </span>
+                </div>
+              </div>
+
+              {/* Navigation Links */}
+              <nav className="hidden md:flex items-center gap-8">
+                <button
+                  onClick={() => setCurrentView('home')}
+                  className={`text-sm font-medium tracking-wide transition-colors ${
+                    currentView === 'home' ? 'text-paprika font-bold' : 'text-charcoal-700 hover:text-paprika'
+                  }`}
+                >
+                  Accueil
+                </button>
+                <button
+                  onClick={() => setCurrentView('catalog')}
+                  className={`text-sm font-medium tracking-wide transition-colors ${
+                    currentView === 'catalog' ? 'text-paprika font-bold' : 'text-charcoal-700 hover:text-paprika'
+                  }`}
+                >
+                  Catalogue des Épices
+                </button>
+                <button
+                  onClick={() => setCurrentView('recipes')}
+                  className={`text-sm font-medium tracking-wide transition-colors ${
+                    currentView === 'recipes' ? 'text-paprika font-bold' : 'text-charcoal-700 hover:text-paprika'
+                  }`}
+                >
+                  Recettes & Inspirations
+                </button>
+                <button
+                  onClick={() => setCurrentView('design-system')}
+                  className={`text-sm font-medium tracking-wide transition-colors ${
+                    currentView === 'design-system' ? 'text-paprika font-bold' : 'text-charcoal-700 hover:text-paprika'
+                  }`}
+                >
+                  Design System
+                </button>
+              </nav>
+
+              {/* Actions : Admin & Panier */}
+              <div className="flex items-center gap-4">
+                <button
+                  onClick={() => setCurrentView('admin')}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold tracking-wider uppercase border transition-all ${
+                    currentView === 'admin'
+                      ? 'bg-cardamom text-white border-cardamom'
+                      : 'border-cardamom/40 text-cardamom hover:bg-cardamom/10'
+                  }`}
+                  title="Gestion des Commandes - Tableau de bord"
+                >
+                  👑 Admin ({orders.length})
+                </button>
+
+                <button
+                  onClick={() => setIsCartOpen(true)}
+                  className="relative p-2.5 rounded-full bg-sand-200 text-charcoal-900 hover:bg-paprika hover:text-white transition-colors duration-200 shadow-sm"
+                  aria-label="Ouvrir le panier"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                  </svg>
+                  {cartCount > 0 && (
+                    <span className="absolute -top-1 -right-1 bg-paprika text-white text-[11px] font-bold w-5 h-5 rounded-full flex items-center justify-center animate-pulse">
+                      {cartCount}
+                    </span>
+                  )}
+                </button>
+              </div>
+            </div>
+          </header>
+
+          {/* --- CONTENU PRINCIPAL PAR VUE --- */}
+          <main className="flex-grow z-10">
+
+            {/* VUE 1 : ACCUEIL (HERO + SIGNATURES + MANIFESTE) */}
+            {currentView === 'home' && (
+              <HomeView
+                spices={spices}
+                onSelectSpice={setSelectedSpice}
+                onAddToCart={addToCart}
+                onExploreCatalog={() => setCurrentView('catalog')}
+                onExploreRecipes={() => setCurrentView('recipes')}
+              />
+            )}
+
+            {/* VUE 2 : CATALOGUE MODERNE FILTRABLE */}
+            {currentView === 'catalog' && (
+              <CatalogView
+                spices={filteredSpices}
+                categories={categories}
+                origins={origins}
+                selectedCategory={selectedCategory}
+                setSelectedCategory={setSelectedCategory}
+                selectedOrigin={selectedOrigin}
+                setSelectedOrigin={setSelectedOrigin}
+                searchQuery={searchQuery}
+                setSearchQuery={setSearchQuery}
+                maxScoville={maxScoville}
+                setMaxScoville={setMaxScoville}
+                onSelectSpice={setSelectedSpice}
+                onAddToCart={addToCart}
+              />
+            )}
+
+            {/* VUE 3 : RECETTES & INSPIRATIONS */}
+            {currentView === 'recipes' && (
+              <RecipesView
+                recipes={RECIPES}
+                onAddToCart={addToCart}
+                spices={spices}
+              />
+            )}
+
+            {/* VUE 4 : TUNNEL DE COMMANDE / CHECKOUT */}
+            {currentView === 'checkout' && (
+              <CheckoutView
+                cart={cart}
+                cartSubtotal={cartSubtotal}
+                onUpdateQuantity={updateCartQuantity}
+                onRemoveItem={removeFromCart}
+                onOrderCompleted={(newOrder) => {
+                  setOrders([newOrder, ...orders]);
+                  setCart([]);
+                  showToast("🎉 Commande validée avec succès !");
+                  setCurrentView('admin');
+                }}
+                onBackToCatalog={() => setCurrentView('catalog')}
+              />
+            )}
+
+            {/* VUE 5 : ADMIN DASHBOARD / GESTION DES COMMANDES */}
+            {currentView === 'admin' && (
+              <AdminDashboardView
+                orders={orders}
+                spices={spices}
+                onUpdateOrderStatus={(orderId, newStatus) => {
+                  setOrders(orders.map(o => o.id === orderId ? { ...o, status: newStatus } : o));
+                  showToast(`Commande ${orderId} passée à : ${newStatus}`);
+                }}
+              />
+            )}
+
+            {/* VUE 6 : DESIGN SYSTEM SHOWCASE */}
+            {currentView === 'design-system' && (
+              <DesignSystemView />
+            )}
+
+          </main>
+
+          {/* --- MODALE DÉTAIL PRODUIT --- */}
+          {selectedSpice && (
+            <ProductDetailModal
+              spice={selectedSpice}
+              onClose={() => setSelectedSpice(null)}
+              onAddToCart={addToCart}
+            />
+          )}
+
+          {/* --- TIROIR PANIER (CART DRAWER) --- */}
+          {isCartOpen && (
+            <CartDrawer
+              cart={cart}
+              cartSubtotal={cartSubtotal}
+              onClose={() => setIsCartOpen(false)}
+              onUpdateQuantity={updateCartQuantity}
+              onRemoveItem={removeFromCart}
+              onProceedToCheckout={() => {
+                setIsCartOpen(false);
+                setCurrentView('checkout');
+              }}
+            />
+          )}
+
+          {/* --- FOOTER --- */}
+          <Footer onNavigate={setCurrentView} />
+        </div>
+      );
+    }
+
+    // =========================================================================
+    // COMPOSANT 1 : ACCUEIL (HOME VIEW AVEC GSAP)
+    // =========================================================================
+    function HomeView({ spices, onSelectSpice, onAddToCart, onExploreCatalog, onExploreRecipes }) {
+      const heroRef = useRef(null);
+      const featuredRef = useRef(null);
+
+      useEffect(() => {
+        const ctx = gsap.context(() => {
+          gsap.from('.hero-badge', { y: 30, opacity: 0, duration: 0.8, ease: 'power2.out' });
+          gsap.from('.hero-title-line', { y: 60, opacity: 0, duration: 1.1, stagger: 0.15, ease: 'power3.out', delay: 0.2 });
+          gsap.from('.hero-desc', { y: 30, opacity: 0, duration: 0.9, delay: 0.6, ease: 'power2.out' });
+          gsap.from('.hero-cta', { y: 20, opacity: 0, duration: 0.8, delay: 0.8, ease: 'power2.out' });
+          gsap.from('.hero-card', { scale: 0.9, opacity: 0, duration: 1.2, delay: 0.4, ease: 'back.out(1.4)' });
+
+          gsap.from('.stagger-card', {
+            scrollTrigger: {
+              trigger: featuredRef.current,
+              start: 'top 80%'
+            },
+            y: 50,
+            opacity: 0,
+            duration: 0.8,
+            stagger: 0.2,
+            ease: 'power2.out'
+          });
+        }, heroRef);
+
+        return () => ctx.revert();
+      }, []);
+
+      const featuredSpices = spices.filter((s) => s.isFeatured).slice(0, 3);
+      const heroSignature = spices.find((s) => s.id === 'melange-signature-djouma') || spices[0];
+
+      return (
+        <div ref={heroRef} className="pb-24">
+          {/* Hero Section */}
+          <section className="relative pt-12 pb-20 md:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+              
+              {/* Texte Hero */}
+              <div className="lg:col-span-7 space-y-6">
+                <div className="hero-badge inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-turmeric/15 text-paprika-700 border border-turmeric/30 text-xs font-bold uppercase tracking-widest">
+                  <span>✦</span> Nouvelle Ère Artisanale <span>✦</span>
+                </div>
+
+                <h1 className="text-4xl sm:text-6xl lg:text-7xl font-serif font-bold text-charcoal-900 tracking-tight leading-[1.1]">
+                  <span className="hero-title-line block">L'Essence Pure</span>
+                  <span className="hero-title-line block text-paprika italic">des Terroirs Rares.</span>
+                </h1>
+
+                <p className="hero-desc text-lg sm:text-xl text-charcoal-700 leading-relaxed max-w-2xl font-light">
+                  Maison d'exploration aromatique fondée par des passionnés de haute gastronomie. Nous sélectionnons des épices sauvages d'exception, récoltées à la main auprès de coopératives éthiques à travers le monde.
+                </p>
+
+                <div className="hero-cta flex flex-wrap items-center gap-4 pt-4">
+                  <button
+                    onClick={onExploreCatalog}
+                    className="px-8 py-4 rounded-xl bg-paprika text-white font-semibold tracking-wide hover:bg-paprika-600 transition-all duration-200 shadow-lg hover:shadow-paprika/30 transform hover:-translate-y-0.5 flex items-center gap-3"
+                  >
+                    <span>Explorer le Catalogue</span>
+                    <span>→</span>
+                  </button>
+                  <button
+                    onClick={onExploreRecipes}
+                    className="px-8 py-4 rounded-xl bg-white border border-sand-300 text-charcoal-800 font-semibold hover:border-paprika hover:text-paprika transition-all duration-200"
+                  >
+                    Inspirations de Chefs
+                  </button>
+                </div>
+
+                {/* Métriques / Réassurance */}
+                <div className="grid grid-cols-3 gap-6 pt-8 border-t border-sand-300/80">
+                  <div>
+                    <div className="text-2xl sm:text-3xl font-bold font-serif text-paprika">100%</div>
+                    <div className="text-xs text-charcoal-600 font-medium">Récolte Sauvage & Éthique</div>
+                  </div>
+                  <div>
+                    <div className="text-2xl sm:text-3xl font-bold font-serif text-turmeric-700">0%</div>
+                    <div className="text-xs text-charcoal-600 font-medium">Additifs & Conservateurs</div>
+                  </div>
+                  <div>
+                    <div className="text-2xl sm:text-3xl font-bold font-serif text-cardamom">IGP & Rares</div>
+                    <div className="text-xs text-charcoal-600 font-medium">Grands Crus Certifiés</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Carte Hero Signature Flottante */}
+              <div className="lg:col-span-5">
+                <div className="hero-card relative rounded-3xl p-6 sm:p-8 bg-white border border-sand-300 spice-shadow overflow-hidden group">
+                  <div className="absolute top-0 right-0 w-36 h-36 bg-turmeric/20 rounded-full blur-2xl -mr-10 -mt-10 pointer-events-none" />
+                  
+                  <div className="relative z-10 space-y-6">
+                    <div className="flex items-center justify-between">
+                      <span className="px-3 py-1 rounded-full bg-paprika-50 text-paprika font-bold text-xs uppercase tracking-wider">
+                        {heroSignature.badge}
+                      </span>
+                      <span className="font-serif text-2xl font-bold text-charcoal-900">
+                        {heroSignature.price.toFixed(2)} €
+                      </span>
+                    </div>
+
+                    <div className="relative h-64 sm:h-72 rounded-2xl overflow-hidden bg-sand-200">
+                      <img
+                        src={heroSignature.image}
+                        alt={heroSignature.name}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-charcoal-900/80 via-transparent to-transparent flex items-end p-6">
+                        <div className="text-white">
+                          <p className="text-xs uppercase tracking-widest text-turmeric font-semibold">{heroSignature.origin}</p>
+                          <h3 className="text-xl font-serif font-bold">{heroSignature.name}</h3>
+                        </div>
+                      </div>
+                    </div>
+
+                    <p className="text-sm text-charcoal-600 line-clamp-2">
+                      {heroSignature.description}
+                    </p>
+
+                    <div className="flex items-center gap-3">
+                      <button
+                        onClick={() => onSelectSpice(heroSignature)}
+                        className="flex-1 py-3 px-4 rounded-xl bg-sand-200 hover:bg-sand-300 text-charcoal-900 text-sm font-semibold transition-colors"
+                      >
+                        Notes Olfactives
+                      </button>
+                      <button
+                        onClick={() => onAddToCart(heroSignature, 1)}
+                        className="py-3 px-5 rounded-xl bg-paprika text-white text-sm font-semibold hover:bg-paprika-600 transition-colors shadow-md"
+                      >
+                        Ajouter +
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          {/* Section Sélection Signature */}
+          <section ref={featuredRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+            <div className="text-center max-w-3xl mx-auto mb-12 space-y-3">
+              <span className="text-xs uppercase tracking-[0.2em] text-paprika font-bold">Sélection Exclusive</span>
+              <h2 className="text-3xl sm:text-4xl font-serif font-bold text-charcoal-900">
+                Nos Mélanges & Grands Crus du Moment
+              </h2>
+              <p className="text-charcoal-600 text-sm sm:text-base">
+                Chaque cru raconte une terre, une saison et un rituel de cueillette ancestral.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {featuredSpices.map((spice) => (
+                <div
+                  key={spice.id}
+                  className="stagger-card bg-white rounded-2xl border border-sand-300 p-6 flex flex-col justify-between hover:border-paprika/50 transition-all duration-300 hover:shadow-xl group"
+                >
+                  <div className="space-y-4">
+                    <div className="relative h-48 rounded-xl overflow-hidden bg-sand-200">
+                      <img
+                        src={spice.image}
+                        alt={spice.name}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
+                      <span className="absolute top-3 left-3 bg-white/90 backdrop-blur-md px-2.5 py-1 rounded-md text-[11px] font-bold text-charcoal-900">
+                        {spice.origin}
+                      </span>
+                    </div>
+
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs font-semibold text-paprika uppercase tracking-wider">{spice.category}</span>
+                        <span className="text-lg font-serif font-bold text-charcoal-900">{spice.price.toFixed(2)} €</span>
+                      </div>
+                      <h3 className="font-serif text-xl font-bold text-charcoal-900 group-hover:text-paprika transition-colors">
+                        {spice.name}
+                      </h3>
+                      <p className="text-xs text-charcoal-600 mt-2 line-clamp-2">
+                        {spice.description}
+                      </p>
+                    </div>
+
+                    {/* Échelle de chaleur Scoville */}
+                    <div className="flex items-center justify-between text-xs py-2 border-t border-b border-sand-200">
+                      <span className="text-charcoal-500">Intensité Aromatique</span>
+                      <div className="flex gap-1">
+                        {[1, 2, 3, 4, 5].map((level) => (
+                          <div
+                            key={level}
+                            className={`w-2 h-2 rounded-full ${
+                              level <= spice.intensity ? 'bg-paprika' : 'bg-sand-300'
+                            }`}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-3 pt-6">
+                    <button
+                      onClick={() => onSelectSpice(spice)}
+                      className="flex-1 py-2.5 rounded-lg border border-sand-300 text-charcoal-800 text-xs font-semibold hover:border-paprika hover:text-paprika transition-colors"
+                    >
+                      Détails & Pyramide
+                    </button>
+                    <button
+                      onClick={() => onAddToCart(spice, 1)}
+                      className="px-4 py-2.5 rounded-lg bg-charcoal-900 hover:bg-paprika text-white text-xs font-semibold transition-colors"
+                    >
+                      Panier +
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* Section Histoire & Terroir */}
+          <section className="bg-sand-200/60 border-y border-sand-300/80 py-20">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div className="space-y-6">
+                  <span className="text-xs uppercase tracking-[0.25em] text-paprika font-bold">L'Engagement Djouma</span>
+                  <h2 className="text-3xl sm:text-5xl font-serif font-bold text-charcoal-900 leading-tight">
+                    Une Traçabilité Directe, du Rhizome au Flacon.
+                  </h2>
+                  <p className="text-charcoal-700 leading-relaxed">
+                    Nous ne faisons aucun compromis sur la fraîcheur des récoltes. Toutes nos épices sont moulues à la commande ou conditionnées entières dans nos flacons fumés anti-UV afin de préserver l'intégralité de leurs huiles volatiles.
+                  </p>
+                  
+                  <div className="space-y-4">
+                    <div className="flex items-start gap-4">
+                      <div className="w-8 h-8 rounded-full bg-paprika/10 text-paprika flex items-center justify-center font-bold text-sm shrink-0">✓</div>
+                      <div>
+                        <h4 className="font-bold text-charcoal-900 text-sm">Agroforesterie & Cueillette Sauvage</h4>
+                        <p className="text-xs text-charcoal-600">Préservation des forêts primaires et des écosystèmes indigènes.</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-4">
+                      <div className="w-8 h-8 rounded-full bg-turmeric/10 text-turmeric-700 flex items-center justify-center font-bold text-sm shrink-0">✓</div>
+                      <div>
+                        <h4 className="font-bold text-charcoal-900 text-sm">Juste Rémunération des Cueilleurs</h4>
+                        <p className="text-xs text-charcoal-600">Partenariats directs payés 40% au-dessus des cours de marché.</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-white">
+                  <img
+                    src="https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=1000&q=80"
+                    alt="Atelier d'épices Djouma"
+                    className="w-full h-[400px] object-cover"
+                  />
+                  <div className="absolute bottom-6 left-6 right-6 bg-white/95 backdrop-blur-md p-6 rounded-2xl border border-sand-300">
+                    <p className="font-serif italic text-charcoal-800 text-sm">
+                      « L'épice n'est pas un simple assaisonnement, c'est l'âme d'une civilisation qui s'invite à votre table. »
+                    </p>
+                    <p className="text-xs font-bold text-paprika mt-2 tracking-wider uppercase">— Djouma, Maître Épicier</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      );
+    }
+
+    // =========================================================================
+    // COMPOSANT 2 : CATALOGUE FILTRABLE
+    // =========================================================================
+    function CatalogView({
+      spices,
+      categories,
+      origins,
+      selectedCategory,
+      setSelectedCategory,
+      selectedOrigin,
+      setSelectedOrigin,
+      searchQuery,
+      setSearchQuery,
+      maxScoville,
+      setMaxScoville,
+      onSelectSpice,
+      onAddToCart
+    }) {
+      return (
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-10">
+          {/* En-tête Catalogue */}
+          <div className="border-b border-sand-300 pb-8 space-y-4">
+            <span className="text-xs uppercase tracking-[0.25em] text-paprika font-bold">Répertoire Gourmand</span>
+            <h1 className="text-3xl sm:text-5xl font-serif font-bold text-charcoal-900">
+              Catalogue des Épices & Terroirs
+            </h1>
+            <p className="text-charcoal-600 max-w-2xl text-sm sm:text-base">
+              Explorez nos flacons d'exception, piments nobles et mélanges signatures moulus à la meule de pierre.
+            </p>
+          </div>
+
+          {/* Barre de Recherche & Filtres */}
+          <div className="bg-white p-6 rounded-2xl border border-sand-300 shadow-sm space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
+              
+              {/* Input Recherche */}
+              <div className="md:col-span-6 relative">
+                <input
+                  type="text"
+                  placeholder="Rechercher une épice, un arôme, une région..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full pl-11 pr-4 py-3 rounded-xl bg-sand-50 border border-sand-300 text-charcoal-900 focus:outline-none focus:border-paprika text-sm"
+                />
+                <span className="absolute left-4 top-3.5 text-charcoal-400">🔍</span>
+              </div>
+
+              {/* Filtre Origine */}
+              <div className="md:col-span-3">
+                <select
+                  value={selectedOrigin}
+                  onChange={(e) => setSelectedOrigin(e.target.value)}
+                  className="w-full py-3 px-4 rounded-xl bg-sand-50 border border-sand-300 text-charcoal-900 text-sm focus:outline-none focus:border-paprika font-medium"
+                >
+                  {origins.map((orig) => (
+                    <option key={orig} value={orig}>
+                      Origine : {orig}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Curseur Force Scoville */}
+              <div className="md:col-span-3 space-y-1">
+                <div className="flex justify-between text-xs font-semibold text-charcoal-700">
+                  <span>Piquant max (Scoville)</span>
+                  <span className="text-paprika font-bold">{maxScoville === 5 ? 'Tous' : `Niveau ${maxScoville}/5`}</span>
+                </div>
+                <input
+                  type="range"
+                  min="0"
+                  max="5"
+                  value={maxScoville}
+                  onChange={(e) => setMaxScoville(Number(e.target.value))}
+                  className="w-full accent-paprika cursor-pointer"
+                />
+              </div>
+
+            </div>
+
+            {/* Onglets Catégories */}
+            <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
+              {categories.map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => setSelectedCategory(cat)}
+                  className={`px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
+                    selectedCategory === cat
+                      ? 'bg-paprika text-white shadow-md'
+                      : 'bg-sand-100 text-charcoal-700 hover:bg-sand-200'
+                  }`}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Grille des Épices */}
+          {spices.length === 0 ? (
+            <div className="text-center py-20 bg-white rounded-3xl border border-dashed border-sand-300 p-8 space-y-3">
+              <span className="text-4xl">🌿</span>
+              <h3 className="text-lg font-bold text-charcoal-800">Aucune épice ne correspond à vos critères</h3>
+              <p className="text-xs text-charcoal-500">Essayez d'élargir vos filtres ou de réinitialiser la recherche.</p>
+              <button
+                onClick={() => {
+                  setSelectedCategory('Tous');
+                  setSelectedOrigin('Toutes');
+                  setSearchQuery('');
+                  setMaxScoville(5);
+                }}
+                className="mt-4 px-4 py-2 rounded-xl bg-sand-200 text-xs font-semibold text-charcoal-900 hover:bg-sand-300"
+              >
+                Réinitialiser les filtres
+              </button>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {spices.map((spice) => (
+                <div
+                  key={spice.id}
+                  className="bg-white rounded-2xl border border-sand-300 p-5 flex flex-col justify-between hover:border-paprika/50 transition-all duration-300 hover:shadow-xl group"
+                >
+                  <div className="space-y-3">
+                    <div className="relative h-44 rounded-xl overflow-hidden bg-sand-200">
+                      <img
+                        src={spice.image}
+                        alt={spice.name}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
+                      <span className="absolute top-2.5 left-2.5 bg-white/90 backdrop-blur-md px-2 py-0.5 rounded text-[10px] font-bold text-charcoal-900">
+                        {spice.origin}
+                      </span>
+                    </div>
+
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-[11px] font-semibold text-paprika uppercase tracking-wider">{spice.category}</span>
+                        <span className="text-base font-serif font-bold text-charcoal-900">{spice.price.toFixed(2)} €</span>
+                      </div>
+                      <h3 className="font-serif text-lg font-bold text-charcoal-900 group-hover:text-paprika transition-colors leading-tight">
+                        {spice.name}
+                      </h3>
+                      <p className="text-xs text-charcoal-500 mt-1 line-clamp-2">
+                        {spice.description}
+                      </p>
+                    </div>
+
+                    <div className="pt-2 border-t border-sand-100 flex items-center justify-between text-[11px] text-charcoal-600">
+                      <span>{spice.unit}</span>
+                      <span className="text-cardamom font-bold">En stock ({spice.inStock})</span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2 pt-4">
+                    <button
+                      onClick={() => onSelectSpice(spice)}
+                      className="flex-1 py-2 rounded-lg border border-sand-300 text-charcoal-800 text-xs font-semibold hover:border-paprika hover:text-paprika transition-colors"
+                    >
+                      Détails
+                    </button>
+                    <button
+                      onClick={() => onAddToCart(spice, 1)}
+                      className="px-3.5 py-2 rounded-lg bg-paprika hover:bg-paprika-600 text-white text-xs font-semibold transition-colors shadow-sm"
+                    >
+                      + Panier
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    // =========================================================================
+    // COMPOSANT 3 : RECETTES & INSPIRATIONS
+    // =========================================================================
+    function RecipesView({ recipes, onAddToCart, spices }) {
+      const [activeRecipe, setActiveRecipe] = useState(recipes[0]);
+
+      return (
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-12">
+          <div className="border-b border-sand-300 pb-6 space-y-3">
+            <span className="text-xs uppercase tracking-[0.25em] text-paprika font-bold">Inspirations Culinaires</span>
+            <h1 className="text-3xl sm:text-5xl font-serif font-bold text-charcoal-900">
+              Recettes de Chefs & Accords Épicés
+            </h1>
+            <p className="text-charcoal-600 max-w-2xl text-sm sm:text-base">
+              Apprenez à doser, torréfier et magnifier les mélanges Djouma avec nos pas-à-pas gastronomiques.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            
+            {/* Liste des Recettes */}
+            <div className="lg:col-span-4 space-y-4">
+              <h3 className="font-bold text-xs uppercase tracking-wider text-charcoal-500 mb-2">Choisir une Création</h3>
+              {recipes.map((r) => (
+                <div
+                  key={r.id}
+                  onClick={() => setActiveRecipe(r)}
+                  className={`p-4 rounded-2xl border cursor-pointer transition-all duration-200 flex gap-4 items-center ${
+                    activeRecipe.id === r.id
+                      ? 'bg-white border-paprika shadow-lg scale-[1.02]'
+                      : 'bg-sand-50 border-sand-300 hover:bg-white'
+                  }`}
+                >
+                  <img src={r.image} alt={r.title} className="w-16 h-16 rounded-xl object-cover" />
+                  <div className="flex-1 min-w-0">
+                    <span className="text-[10px] font-bold text-paprika uppercase tracking-wider">{r.category}</span>
+                    <h4 className="font-serif font-bold text-sm text-charcoal-900 truncate">{r.title}</h4>
+                    <p className="text-xs text-charcoal-500 mt-0.5">⏱ {r.prepTime} • {r.difficulty}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Fiche Détaillée de la Recette Active */}
+            <div className="lg:col-span-8 bg-white rounded-3xl border border-sand-300 p-6 sm:p-10 shadow-sm space-y-8">
+              <div className="relative h-64 sm:h-80 rounded-2xl overflow-hidden">
+                <img src={activeRecipe.image} alt={activeRecipe.title} className="w-full h-full object-cover" />
+                <div className="absolute inset-0 bg-gradient-to-t from-charcoal-900/90 via-charcoal-900/30 to-transparent flex items-end p-6 sm:p-8">
+                  <div className="text-white space-y-2">
+                    <span className="px-3 py-1 rounded-full bg-turmeric text-charcoal-900 font-bold text-xs uppercase tracking-wider">
+                      {activeRecipe.category}
+                    </span>
+                    <h2 className="text-2xl sm:text-4xl font-serif font-bold">{activeRecipe.title}</h2>
+                  </div>
+                </div>
+              </div>
+
+              {/* Métriques Recette */}
+              <div className="grid grid-cols-4 gap-4 p-4 rounded-xl bg-sand-50 border border-sand-200 text-center">
+                <div>
+                  <span className="text-xs text-charcoal-500 block">Préparation</span>
+                  <span className="font-bold text-sm text-charcoal-900">{activeRecipe.prepTime}</span>
+                </div>
+                <div>
+                  <span className="text-xs text-charcoal-500 block">Cuisson</span>
+                  <span className="font-bold text-sm text-charcoal-900">{activeRecipe.cookTime}</span>
+                </div>
+                <div>
+                  <span className="text-xs text-charcoal-500 block">Difficulté</span>
+                  <span className="font-bold text-sm text-paprika">{activeRecipe.difficulty}</span>
+                </div>
+                <div>
+                  <span className="text-xs text-charcoal-500 block">Portions</span>
+                  <span className="font-bold text-sm text-charcoal-900">{activeRecipe.servings} pers.</span>
+                </div>
+              </div>
+
+              {/* Épice Clé & Bouton d'Achat Rapide */}
+              <div className="p-4 rounded-2xl bg-paprika-50 border border-paprika-200 flex items-center justify-between flex-wrap gap-4">
+                <div className="flex items-center gap-3">
+                  <span className="text-2xl">🌿</span>
+                  <div>
+                    <span className="text-xs text-paprika font-bold uppercase tracking-wider">Épice Signature Requise</span>
+                    <h4 className="font-serif font-bold text-charcoal-900">{activeRecipe.featuredSpiceName}</h4>
+                  </div>
+                </div>
+                <button
+                  onClick={() => {
+                    const targetSpice = spices.find(s => s.id === activeRecipe.featuredSpiceId) || spices[0];
+                    onAddToCart(targetSpice, 1);
+                  }}
+                  className="px-4 py-2 rounded-xl bg-paprika text-white text-xs font-bold hover:bg-paprika-600 transition-colors shadow-sm"
+                >
+                  Ajouter l'épice au panier →
+                </button>
+              </div>
+
+              {/* Ingrédients & Étapes */}
+              <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
+                <div className="md:col-span-5 space-y-4">
+                  <h3 className="font-serif text-xl font-bold text-charcoal-900 border-b border-sand-200 pb-2">
+                    Ingrédients
+                  </h3>
+                  <ul className="space-y-2.5 text-sm text-charcoal-700">
+                    {activeRecipe.ingredients.map((ing, idx) => (
+                      <li key={idx} className="flex items-start gap-2">
+                        <span className="text-paprika font-bold">•</span>
+                        <span>{ing}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div className="md:col-span-7 space-y-4">
+                  <h3 className="font-serif text-xl font-bold text-charcoal-900 border-b border-sand-200 pb-2">
+                    Préparation Pas-à-Pas
+                  </h3>
+                  <div className="space-y-4">
+                    {activeRecipe.steps.map((step, idx) => (
+                      <div key={idx} className="flex items-start gap-3 text-sm text-charcoal-700">
+                        <span className="w-6 h-6 rounded-full bg-sand-200 text-charcoal-900 flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">
+                          {idx + 1}
+                        </span>
+                        <p className="leading-relaxed">{step}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Astuce du Chef */}
+              <div className="p-4 rounded-xl bg-sand-100 border-l-4 border-turmeric text-sm italic text-charcoal-800">
+                <span className="font-bold text-xs uppercase tracking-wider not-italic text-turmeric-700 block mb-1">
+                  💡 Le Secret du Maître Épicier
+                </span>
+                {activeRecipe.chefTip}
+              </div>
+            </div>
+
+          </div>
+        </div>
+      );
+    }
+
+    // =========================================================================
+    // COMPOSANT 4 : MODALE DÉTAIL PRODUIT (PYRAMIDE OLFACTIVE & CONSEILS)
+    // =========================================================================
+    function ProductDetailModal({ spice, onClose, onAddToCart }) {
+      const [quantity, setQuantity] = useState(1);
+      const [selectedFormat, setSelectedFormat] = useState(spice.unit);
+
+      const formats = [
+        spice.unit,
+        "Sachet Kraft Éco-Recharge 150g (-15%)",
+        "Coffret Cadeau Bois d'Acacia (+6.00€)"
+      ];
+
+      return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-charcoal-900/70 backdrop-blur-sm animate-fadeIn">
+          <div className="relative w-full max-w-3xl bg-white rounded-3xl shadow-2xl border border-sand-300 overflow-hidden max-h-[90vh] flex flex-col custom-scrollbar overflow-y-auto">
+            
+            {/* Bouton Fermer */}
+            <button
+              onClick={onClose}
+              className="absolute top-4 right-4 z-20 w-10 h-10 rounded-full bg-white/90 text-charcoal-900 hover:bg-paprika hover:text-white flex items-center justify-center font-bold text-lg shadow-md transition-colors"
+            >
+              ✕
+            </button>
+
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-8 p-6 sm:p-8">
+              
+              {/* Image & Origine */}
+              <div className="md:col-span-5 space-y-4">
+                <div className="relative h-64 sm:h-72 rounded-2xl overflow-hidden bg-sand-200">
+                  <img src={spice.image} alt={spice.name} className="w-full h-full object-cover" />
+                  <span className="absolute bottom-3 left-3 bg-white/95 px-3 py-1 rounded-md text-xs font-bold text-charcoal-900">
+                    {spice.origin}
+                  </span>
+                </div>
+
+                <div className="p-4 rounded-xl bg-sand-50 border border-sand-200 text-xs space-y-1.5 text-charcoal-700">
+                  <div className="font-bold text-charcoal-900">🌿 Traçabilité & Récolte :</div>
+                  <p>{spice.harvestDate}</p>
+                </div>
+              </div>
+
+              {/* Informations Clés */}
+              <div className="md:col-span-7 space-y-5">
+                <div>
+                  <span className="text-xs font-bold text-paprika uppercase tracking-wider">{spice.category}</span>
+                  <h2 className="text-2xl sm:text-3xl font-serif font-bold text-charcoal-900">{spice.name}</h2>
+                  <p className="text-xs text-charcoal-500 font-medium italic mt-0.5">{spice.subtitle}</p>
+                </div>
+
+                <div className="flex items-center gap-4">
+                  <span className="text-3xl font-serif font-bold text-charcoal-900">{spice.price.toFixed(2)} €</span>
+                  <span className="px-2.5 py-1 rounded-full bg-cardamom/10 text-cardamom text-xs font-bold">
+                    ✓ En stock ({spice.inStock} disponibles)
+                  </span>
+                </div>
+
+                <p className="text-sm text-charcoal-700 leading-relaxed">
+                  {spice.description}
+                </p>
+
+                {/* Pyramide Olfactive */}
+                <div className="p-4 rounded-2xl bg-sand-50 border border-sand-200 space-y-3">
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-charcoal-900 flex items-center gap-2">
+                    <span>✦</span> Pyramide Aromatique & Notes de Dégustation
+                  </h4>
+                  <div className="grid grid-cols-3 gap-2 text-[11px] text-center">
+                    <div className="p-2 rounded-lg bg-white border border-sand-200">
+                      <span className="font-bold text-paprika block text-[10px] uppercase">Notes de Tête</span>
+                      <span className="text-charcoal-700">{spice.aromaticPyramid.top.join(', ')}</span>
+                    </div>
+                    <div className="p-2 rounded-lg bg-white border border-sand-200">
+                      <span className="font-bold text-turmeric-700 block text-[10px] uppercase">Notes de Cœur</span>
+                      <span className="text-charcoal-700">{spice.aromaticPyramid.heart.join(', ')}</span>
+                    </div>
+                    <div className="p-2 rounded-lg bg-white border border-sand-200">
+                      <span className="font-bold text-cardamom block text-[10px] uppercase">Notes de Fond</span>
+                      <span className="text-charcoal-700">{spice.aromaticPyramid.base.join(', ')}</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Choix du Format */}
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-charcoal-800">Format & Conditionnement :</label>
+                  <select
+                    value={selectedFormat}
+                    onChange={(e) => setSelectedFormat(e.target.value)}
+                    className="w-full p-2.5 rounded-xl bg-sand-50 border border-sand-300 text-xs font-medium text-charcoal-900 focus:outline-none focus:border-paprika"
+                  >
+                    {formats.map((f, i) => (
+                      <option key={i} value={f}>{f}</option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Sélecteur de Quantité & Bouton Panier */}
+                <div className="flex items-center gap-4 pt-2">
+                  <div className="flex items-center border border-sand-300 rounded-xl bg-sand-50 p-1">
+                    <button
+                      onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                      className="w-8 h-8 rounded-lg bg-white hover:bg-sand-200 font-bold text-charcoal-900"
+                    >
+                      -
+                    </button>
+                    <span className="w-10 text-center font-bold text-sm text-charcoal-900">{quantity}</span>
+                    <button
+                      onClick={() => setQuantity(quantity + 1)}
+                      className="w-8 h-8 rounded-lg bg-white hover:bg-sand-200 font-bold text-charcoal-900"
+                    >
+                      +
+                    </button>
+                  </div>
+
+                  <button
+                    onClick={() => {
+                      onAddToCart(spice, quantity, selectedFormat);
+                      onClose();
+                    }}
+                    className="flex-1 py-3.5 px-6 rounded-xl bg-paprika hover:bg-paprika-600 text-white font-semibold text-sm tracking-wide transition-all shadow-md"
+                  >
+                    Ajouter au Panier • {(spice.price * quantity).toFixed(2)} €
+                  </button>
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+      );
+    }
+
+    // =========================================================================
+    // COMPOSANT 5 : TIROIR PANIER (CART DRAWER)
+    // =========================================================================
+    function CartDrawer({ cart, cartSubtotal, onClose, onUpdateQuantity, onRemoveItem, onProceedToCheckout }) {
+      return (
+        <div className="fixed inset-0 z-50 flex justify-end bg-charcoal-900/60 backdrop-blur-sm animate-fadeIn">
+          <div className="w-full max-w-md bg-white h-full shadow-2xl flex flex-col justify-between border-l border-sand-300">
+            
+            {/* Entête */}
+            <div className="p-6 border-b border-sand-200 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <span className="text-xl">🧺</span>
+                <h3 className="font-serif text-xl font-bold text-charcoal-900">Votre Panier Découverte</h3>
+              </div>
+              <button onClick={onClose} className="text-charcoal-400 hover:text-charcoal-900 font-bold text-lg">
+                ✕
+              </button>
+            </div>
+
+            {/* Liste des Articles */}
+            <div className="flex-1 overflow-y-auto p-6 space-y-4 custom-scrollbar">
+              {cart.length === 0 ? (
+                <div className="text-center py-16 text-charcoal-500 space-y-3">
+                  <span className="text-4xl block">🍃</span>
+                  <p className="font-medium text-sm">Votre panier est encore vide.</p>
+                  <p className="text-xs">Laissez-vous tenter par nos mélanges d'exception !</p>
+                </div>
+              ) : (
+                cart.map((item) => (
+                  <div key={item.cartItemId} className="p-4 rounded-xl bg-sand-50 border border-sand-200 flex gap-4 items-center">
+                    <img src={item.image} alt={item.name} className="w-14 h-14 rounded-lg object-cover" />
+                    <div className="flex-1 min-w-0">
+                      <h4 className="font-bold text-xs text-charcoal-900 truncate">{item.name}</h4>
+                      <p className="text-[11px] text-charcoal-500">{item.format}</p>
+                      <span className="font-serif font-bold text-sm text-paprika">{item.price.toFixed(2)} €</span>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => onUpdateQuantity(item.cartItemId, -1)}
+                        className="w-6 h-6 rounded bg-white border border-sand-300 text-xs font-bold"
+                      >
+                        -
+                      </button>
+                      <span className="text-xs font-bold">{item.quantity}</span>
+                      <button
+                        onClick={() => onUpdateQuantity(item.cartItemId, 1)}
+                        className="w-6 h-6 rounded bg-white border border-sand-300 text-xs font-bold"
+                      >
+                        +
+                      </button>
+                    </div>
+
+                    <button
+                      onClick={() => onRemoveItem(item.cartItemId)}
+                      className="text-charcoal-400 hover:text-paprika text-xs font-bold pl-2"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                ))
+              )}
+            </div>
+
+            {/* Pied de Panier & Checkout */}
+            {cart.length > 0 && (
+              <div className="p-6 border-t border-sand-200 bg-sand-50 space-y-4">
+                <div className="flex justify-between text-sm text-charcoal-700">
+                  <span>Sous-total</span>
+                  <span className="font-serif font-bold text-base text-charcoal-900">{cartSubtotal.toFixed(2)} €</span>
+                </div>
+                <div className="text-xs text-charcoal-500 flex items-center justify-between">
+                  <span>Livraison Offerte dès 60€</span>
+                  <span className="text-cardamom font-bold">{cartSubtotal >= 60 ? 'Gratuite !' : 'Calculée au checkout'}</span>
+                </div>
+
+                <button
+                  onClick={onProceedToCheckout}
+                  className="w-full py-4 rounded-xl bg-paprika hover:bg-paprika-600 text-white font-bold text-sm tracking-wide transition-all shadow-lg"
+                >
+                  Passer la Commande →
+                </button>
+              </div>
+            )}
+
+          </div>
+        </div>
+      );
+    }
+
+    // =========================================================================
+    // COMPOSANT 6 : TUNNEL DE COMMANDE / CHECKOUT
+    // =========================================================================
+    function CheckoutView({ cart, cartSubtotal, onUpdateQuantity, onRemoveItem, onOrderCompleted, onBackToCatalog }) {
+      const [packaging, setPackaging] = useState('lin');
+      const [notes, setNotes] = useState('');
+      const [formData, setFormData] = useState({
+        name: '',
+        email: '',
+        phone: '',
+        address: '',
+        city: '',
+        postalCode: ''
+      });
+
+      const packagingFee = packaging === 'bois' ? 5.00 : 0.00;
+      const shippingFee = cartSubtotal >= 60 || cartSubtotal === 0 ? 0.00 : 4.90;
+      const total = cartSubtotal + packagingFee + shippingFee;
+
+      const handleSubmit = (e) => {
+        e.preventDefault();
+        if (!formData.name || !formData.email || !formData.address) {
+          alert('Veuillez renseigner les coordonnées de livraison.');
+          return;
+        }
+
+        const newOrder = {
+          id: `DJ-2026-${Math.floor(1000 + Math.random() * 9000)}`,
+          customer: formData,
+          items: cart,
+          packaging: packaging === 'bois' ? "Coffret Bois d'Acacia Gravé (+5.00€)" : "Pochon en Lin Écologique",
+          packagingFee,
+          shippingFee,
+          subtotal: cartSubtotal,
+          total,
+          status: "En attente",
+          createdAt: new Date().toISOString(),
+          notes
+        };
+
+        onOrderCompleted(newOrder);
+      };
+
+      if (cart.length === 0) {
+        return (
+          <div className="max-w-xl mx-auto px-4 py-20 text-center space-y-4">
+            <span className="text-5xl block">🛍️</span>
+            <h2 className="text-2xl font-serif font-bold text-charcoal-900">Votre panier est vide</h2>
+            <p className="text-sm text-charcoal-600">Sélectionnez quelques épices avant de finaliser votre commande.</p>
+            <button
+              onClick={onBackToCatalog}
+              className="px-6 py-3 rounded-xl bg-paprika text-white text-sm font-bold shadow-md"
+            >
+              Retourner au Catalogue
+            </button>
+          </div>
+        );
+      }
+
+      return (
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-8">
+          <div className="border-b border-sand-300 pb-4">
+            <span className="text-xs uppercase tracking-widest text-paprika font-bold">Étape Finale</span>
+            <h1 className="text-3xl sm:text-4xl font-serif font-bold text-charcoal-900">Passer une Commande</h1>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            
+            {/* Formulaire de Livraison */}
+            <form onSubmit={handleSubmit} className="lg:col-span-7 bg-white p-6 sm:p-8 rounded-3xl border border-sand-300 shadow-sm space-y-6">
+              <h3 className="text-lg font-serif font-bold text-charcoal-900 border-b border-sand-200 pb-3">
+                1. Coordonnées de Livraison
+              </h3>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="text-xs font-bold text-charcoal-700 block mb-1">Nom & Prénom *</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="Jean Dupont"
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    className="w-full p-3 rounded-xl bg-sand-50 border border-sand-300 text-sm focus:outline-none focus:border-paprika"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs font-bold text-charcoal-700 block mb-1">Email *</label>
+                  <input
+                    type="email"
+                    required
+                    placeholder="jean@gastronomie.fr"
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    className="w-full p-3 rounded-xl bg-sand-50 border border-sand-300 text-sm focus:outline-none focus:border-paprika"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="text-xs font-bold text-charcoal-700 block mb-1">Téléphone</label>
+                  <input
+                    type="tel"
+                    placeholder="+33 6 12 34 56 78"
+                    value={formData.phone}
+                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                    className="w-full p-3 rounded-xl bg-sand-50 border border-sand-300 text-sm focus:outline-none focus:border-paprika"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs font-bold text-charcoal-700 block mb-1">Adresse postale *</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="12 rue des Épices"
+                    value={formData.address}
+                    onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                    className="w-full p-3 rounded-xl bg-sand-50 border border-sand-300 text-sm focus:outline-none focus:border-paprika"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="text-xs font-bold text-charcoal-700 block mb-1">Ville *</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="Paris"
+                    value={formData.city}
+                    onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+                    className="w-full p-3 rounded-xl bg-sand-50 border border-sand-300 text-sm focus:outline-none focus:border-paprika"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs font-bold text-charcoal-700 block mb-1">Code Postal *</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="75001"
+                    value={formData.postalCode}
+                    onChange={(e) => setFormData({ ...formData, postalCode: e.target.value })}
+                    className="w-full p-3 rounded-xl bg-sand-50 border border-sand-300 text-sm focus:outline-none focus:border-paprika"
+                  />
+                </div>
+              </div>
+
+              {/* Choix Emballage Cadeau */}
+              <div className="space-y-3 pt-2">
+                <label className="text-xs font-bold text-charcoal-700 block">2. Options d'Emballage Artisanal</label>
+                <div className="grid grid-cols-2 gap-3">
+                  <div
+                    onClick={() => setPackaging('lin')}
+                    className={`p-3.5 rounded-xl border cursor-pointer flex items-center gap-3 ${
+                      packaging === 'lin' ? 'bg-paprika-50 border-paprika text-paprika font-bold' : 'bg-sand-50 border-sand-300'
+                    }`}
+                  >
+                    <span>🌾</span>
+                    <span className="text-xs">Pochon Lin Écologique (Inclus)</span>
+                  </div>
+                  <div
+                    onClick={() => setPackaging('bois')}
+                    className={`p-3.5 rounded-xl border cursor-pointer flex items-center gap-3 ${
+                      packaging === 'bois' ? 'bg-paprika-50 border-paprika text-paprika font-bold' : 'bg-sand-50 border-sand-300'
+                    }`}
+                  >
+                    <span>🎁</span>
+                    <span className="text-xs">Coffret Bois Gravé (+5.00€)</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Note / Instruction */}
+              <div>
+                <label className="text-xs font-bold text-charcoal-700 block mb-1">Message ou note personnalisée</label>
+                <textarea
+                  rows="2"
+                  placeholder="Instructions de livraison ou mot pour le destinataire..."
+                  value={notes}
+                  onChange={(e) => setNotes(e.target.value)}
+                  className="w-full p-3 rounded-xl bg-sand-50 border border-sand-300 text-sm focus:outline-none focus:border-paprika"
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="w-full py-4 rounded-xl bg-paprika hover:bg-paprika-600 text-white font-bold text-base tracking-wide transition-all shadow-xl"
+              >
+                Confirmer la Commande • {total.toFixed(2)} €
+              </button>
+            </form>
+
+            {/* Récapitulatif Panier */}
+            <div className="lg:col-span-5 bg-sand-50 p-6 sm:p-8 rounded-3xl border border-sand-300 space-y-6">
+              <h3 className="text-lg font-serif font-bold text-charcoal-900 border-b border-sand-300 pb-3">
+                Récapitulatif ({cart.length} articles)
+              </h3>
+
+              <div className="space-y-3 max-h-72 overflow-y-auto custom-scrollbar pr-2">
+                {cart.map((item) => (
+                  <div key={item.cartItemId} className="flex justify-between items-center text-xs">
+                    <div>
+                      <p className="font-bold text-charcoal-900">{item.name} <span className="text-paprika font-normal">x{item.quantity}</span></p>
+                      <p className="text-charcoal-500 text-[10px]">{item.format}</p>
+                    </div>
+                    <span className="font-serif font-bold text-charcoal-900">{(item.price * item.quantity).toFixed(2)} €</span>
+                  </div>
+                ))}
+              </div>
+
+              <div className="pt-4 border-t border-sand-300 space-y-2 text-xs text-charcoal-700">
+                <div className="flex justify-between">
+                  <span>Sous-total</span>
+                  <span>{cartSubtotal.toFixed(2)} €</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Emballage ({packaging === 'bois' ? "Coffret Bois" : "Pochon Lin"})</span>
+                  <span>{packagingFee.toFixed(2)} €</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Frais de port</span>
+                  <span className={shippingFee === 0 ? "text-cardamom font-bold" : ""}>
+                    {shippingFee === 0 ? "Offert" : `${shippingFee.toFixed(2)} €`}
+                  </span>
+                </div>
+                <div className="pt-3 border-t border-sand-300 flex justify-between text-base font-serif font-bold text-charcoal-900">
+                  <span>Total TTC</span>
+                  <span className="text-paprika text-xl">{total.toFixed(2)} €</span>
+                </div>
+              </div>
+
+              <div className="p-4 rounded-xl bg-white border border-sand-200 text-xs text-charcoal-600 space-y-1">
+                <p className="font-bold text-charcoal-900">🔒 Paiement Sécurisé & Garanti</p>
+                <p>Expédition soignée sous 24h ouvrées dans nos flacons scellés.</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      );
+    }
+
+    // =========================================================================
+    // COMPOSANT 7 : GESTION DES COMMANDES - ADMIN DASHBOARD
+    // =========================================================================
+    function AdminDashboardView({ orders, spices, onUpdateOrderStatus }) {
+      const [filterStatus, setFilterStatus] = useState('Tous');
+
+      const filteredOrders = filterStatus === 'Tous'
+        ? orders
+        : orders.filter(o => o.status === filterStatus);
+
+      const totalRevenue = orders.reduce((sum, o) => sum + o.total, 0);
+      const pendingCount = orders.filter(o => o.status === 'En attente' || o.status === 'En préparation').length;
+      const lowStockItems = spices.filter(s => s.inStock <= 20);
+
+      const statusColors = {
+        'En attente': 'bg-turmeric/20 text-turmeric-800 border-turmeric/40',
+        'En préparation': 'bg-paprika/15 text-paprika-800 border-paprika/30',
+        'Expédiée': 'bg-blue-100 text-blue-800 border-blue-300',
+        'Livrée': 'bg-cardamom/20 text-cardamom-800 border-cardamom/40'
+      };
+
+      return (
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-10">
+          <div className="border-b border-sand-300 pb-6 flex items-center justify-between flex-wrap gap-4">
+            <div>
+              <span className="text-xs uppercase tracking-widest text-cardamom font-bold">Back-Office Artisan</span>
+              <h1 className="text-3xl sm:text-4xl font-serif font-bold text-charcoal-900">Gestion des Commandes</h1>
+            </div>
+            <span className="px-3 py-1.5 rounded-full bg-cardamom text-white text-xs font-bold">
+              ✓ Serveur Node / Express Connecté
+            </span>
+          </div>
+
+          {/* KPIs Statistiques */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="bg-white p-6 rounded-2xl border border-sand-300 shadow-sm space-y-1">
+              <span className="text-xs text-charcoal-500 font-bold uppercase">Chiffre d'Affaires</span>
+              <div className="text-3xl font-serif font-bold text-paprika">{totalRevenue.toFixed(2)} €</div>
+              <span className="text-[11px] text-cardamom font-medium">↑ +18% ce mois</span>
+            </div>
+            <div className="bg-white p-6 rounded-2xl border border-sand-300 shadow-sm space-y-1">
+              <span className="text-xs text-charcoal-500 font-bold uppercase">Total Commandes</span>
+              <div className="text-3xl font-serif font-bold text-charcoal-900">{orders.length}</div>
+              <span className="text-[11px] text-charcoal-500">Panier moyen : {(totalRevenue / (orders.length || 1)).toFixed(2)} €</span>
+            </div>
+            <div className="bg-white p-6 rounded-2xl border border-sand-300 shadow-sm space-y-1">
+              <span className="text-xs text-charcoal-500 font-bold uppercase">À Traiter</span>
+              <div className="text-3xl font-serif font-bold text-turmeric-700">{pendingCount}</div>
+              <span className="text-[11px] text-turmeric-800 font-medium">Priorité expédition</span>
+            </div>
+            <div className="bg-white p-6 rounded-2xl border border-sand-300 shadow-sm space-y-1">
+              <span className="text-xs text-charcoal-500 font-bold uppercase">Alertes Stock Rares</span>
+              <div className="text-3xl font-serif font-bold text-saffron">{lowStockItems.length}</div>
+              <span className="text-[11px] text-saffron font-medium">Safran & Poivres de Kampot</span>
+            </div>
+          </div>
+
+          {/* Filtres par Statut */}
+          <div className="flex items-center gap-2 overflow-x-auto pb-2">
+            {['Tous', 'En attente', 'En préparation', 'Expédiée', 'Livrée'].map((st) => (
+              <button
+                key={st}
+                onClick={() => setFilterStatus(st)}
+                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+                  filterStatus === st
+                    ? 'bg-charcoal-900 text-white shadow-md'
+                    : 'bg-sand-200 text-charcoal-700 hover:bg-sand-300'
+                }`}
+              >
+                {st}
+              </button>
+            ))}
+          </div>
+
+          {/* Tableau des Commandes */}
+          <div className="bg-white rounded-3xl border border-sand-300 shadow-sm overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs text-charcoal-700">
+                <thead className="bg-sand-100/80 text-charcoal-900 font-bold uppercase text-[10px] tracking-wider border-b border-sand-300">
+                  <tr>
+                    <th className="p-4">N° Commande</th>
+                    <th className="p-4">Client</th>
+                    <th className="p-4">Articles</th>
+                    <th className="p-4">Montant</th>
+                    <th className="p-4">Date</th>
+                    <th className="p-4">Statut Actuel</th>
+                    <th className="p-4 text-right">Mettre à Jour</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-sand-200">
+                  {filteredOrders.map((order) => (
+                    <tr key={order.id} className="hover:bg-sand-50 transition-colors">
+                      <td className="p-4 font-mono font-bold text-charcoal-900">{order.id}</td>
+                      <td className="p-4">
+                        <div className="font-bold text-charcoal-900">{order.customer.name}</div>
+                        <div className="text-[11px] text-charcoal-500">{order.customer.city} ({order.customer.email})</div>
+                      </td>
+                      <td className="p-4 max-w-xs">
+                        <ul className="space-y-0.5">
+                          {order.items.map((it, i) => (
+                            <li key={i} className="truncate">
+                              • {it.name} <span className="font-bold text-paprika">x{it.quantity}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </td>
+                      <td className="p-4 font-serif font-bold text-charcoal-900 text-sm">
+                        {order.total.toFixed(2)} €
+                      </td>
+                      <td className="p-4 text-charcoal-500">
+                        {new Date(order.createdAt).toLocaleDateString('fr-FR')}
+                      </td>
+                      <td className="p-4">
+                        <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold border ${statusColors[order.status] || 'bg-sand-200'}`}>
+                          {order.status}
+                        </span>
+                      </td>
+                      <td className="p-4 text-right">
+                        <select
+                          value={order.status}
+                          onChange={(e) => onUpdateOrderStatus(order.id, e.target.value)}
+                          className="p-1.5 rounded-lg bg-sand-100 border border-sand-300 text-xs font-semibold text-charcoal-900 focus:outline-none focus:border-paprika"
+                        >
+                          <option value="En attente">En attente</option>
+                          <option value="En préparation">En préparation</option>
+                          <option value="Expédiée">Expédiée</option>
+                          <option value="Livrée">Livrée</option>
+                        </select>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // =========================================================================
+    // COMPOSANT 8 : DESIGN SYSTEM SHOWCASE
+    // =========================================================================
+    function DesignSystemView() {
+      return (
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-12">
+          <div className="border-b border-sand-300 pb-6 space-y-2">
+            <span className="text-xs uppercase tracking-widest text-paprika font-bold">Architecture Visuelle</span>
+            <h1 className="text-3xl sm:text-5xl font-serif font-bold text-charcoal-900">
+              Design System : Les Épices de Djouma
+            </h1>
+            <p className="text-charcoal-600 text-sm">
+              Charte graphique artisanale haut de gamme pour l'ensemble des 15 écrans du projet Stitch.
+            </p>
+          </div>
+
+          {/* Palette Couleurs */}
+          <div className="space-y-4">
+            <h3 className="font-serif text-2xl font-bold text-charcoal-900">1. Palette Terroirs & Épices</h3>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+              <div className="p-4 rounded-2xl bg-paprika text-white space-y-1 shadow-md">
+                <span className="font-bold text-xs block">Paprika / Terracotta</span>
+                <span className="text-[10px] opacity-80">#C2593F • Accent Primaire</span>
+              </div>
+              <div className="p-4 rounded-2xl bg-turmeric text-charcoal-900 space-y-1 shadow-md">
+                <span className="font-bold text-xs block">Or Curcuma</span>
+                <span className="text-[10px] opacity-80">#E0A93B • Accent Solaire</span>
+              </div>
+              <div className="p-4 rounded-2xl bg-cardamom text-white space-y-1 shadow-md">
+                <span className="font-bold text-xs block">Vert Cardamome</span>
+                <span className="text-[10px] opacity-80">#3F5E4D • Éthique & Terre</span>
+              </div>
+              <div className="p-4 rounded-2xl bg-saffron text-white space-y-1 shadow-md">
+                <span className="font-bold text-xs block">Safran Rubis</span>
+                <span className="text-[10px] opacity-80">#E05A2B • Rareté</span>
+              </div>
+              <div className="p-4 rounded-2xl bg-sand-200 text-charcoal-900 border border-sand-300 space-y-1">
+                <span className="font-bold text-xs block">Sable & Lin</span>
+                <span className="text-[10px] opacity-80">#F4ECE0 • Fond Chaud</span>
+              </div>
+              <div className="p-4 rounded-2xl bg-charcoal-900 text-white space-y-1 shadow-md">
+                <span className="font-bold text-xs block">Ardoise Sombre</span>
+                <span className="text-[10px] opacity-80">#141211 • Typographie</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Typographie */}
+          <div className="space-y-4">
+            <h3 className="font-serif text-2xl font-bold text-charcoal-900">2. Échelle Typographique</h3>
+            <div className="p-6 rounded-2xl bg-white border border-sand-300 space-y-4">
+              <div>
+                <span className="text-xs text-charcoal-400 uppercase font-mono">Headings / Playfair Display (Serif)</span>
+                <h1 className="text-4xl font-serif font-bold text-charcoal-900">Mélanges d'Exception & Haute Gastronomie</h1>
+              </div>
+              <div>
+                <span className="text-xs text-charcoal-400 uppercase font-mono">Emblème / Cinzel (Serif Romain)</span>
+                <h2 className="text-2xl font-cinzel font-bold tracking-widest text-paprika">LES ÉPICES DE DJOUMA</h2>
+              </div>
+              <div>
+                <span className="text-xs text-charcoal-400 uppercase font-mono">Body / Plus Jakarta Sans</span>
+                <p className="text-sm text-charcoal-700 leading-relaxed max-w-2xl">
+                  Typographie moderne assurant une lisibilité maximale pour les fiches produits, notes olfactives et étapes de préparation culinaire.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // =========================================================================
+    // COMPOSANT 9 : FOOTER
+    // =========================================================================
+    function Footer({ onNavigate }) {
+      return (
+        <footer className="bg-charcoal-900 text-sand-100 pt-16 pb-12 border-t border-charcoal-800">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
+              
+              {/* Marque */}
+              <div className="md:col-span-5 space-y-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-paprika to-turmeric flex items-center justify-center text-white font-cinzel font-bold text-lg">
+                    D
+                  </div>
+                  <span className="font-cinzel text-lg font-bold tracking-widest text-white">
+                    LES ÉPICES DE DJOUMA
+                  </span>
+                </div>
+                <p className="text-xs text-sand-300/80 leading-relaxed max-w-sm">
+                  Sélectionneur et assembleur d'épices d'origine sauvage. Nous célébrons la biodiversité culinaire et le travail des communautés paysannes.
+                </p>
+              </div>
+
+              {/* Liens Rapides */}
+              <div className="md:col-span-3 space-y-3">
+                <h4 className="font-serif font-bold text-sm text-turmeric uppercase tracking-wider">Navigation</h4>
+                <ul className="space-y-2 text-xs text-sand-300">
+                  <li><button onClick={() => onNavigate('home')} className="hover:text-paprika transition-colors">Accueil & Philosophie</button></li>
+                  <li><button onClick={() => onNavigate('catalog')} className="hover:text-paprika transition-colors">Catalogue des Épices</button></li>
+                  <li><button onClick={() => onNavigate('recipes')} className="hover:text-paprika transition-colors">Recettes & Inspirations</button></li>
+                  <li><button onClick={() => onNavigate('admin')} className="hover:text-paprika transition-colors">Gestion des Commandes</button></li>
+                </ul>
+              </div>
+
+              {/* Newsletter */}
+              <div className="md:col-span-4 space-y-3">
+                <h4 className="font-serif font-bold text-sm text-turmeric uppercase tracking-wider">La Gazette des Terroirs</h4>
+                <p className="text-xs text-sand-300/80">Recevez nos fiches de récolte et recettes de chefs chaque mois.</p>
+                <div className="flex gap-2">
+                  <input
+                    type="email"
+                    placeholder="Votre email..."
+                    className="p-2.5 rounded-xl bg-charcoal-800 border border-charcoal-700 text-xs text-white placeholder-sand-400 focus:outline-none focus:border-turmeric flex-1"
+                  />
+                  <button className="px-4 py-2.5 rounded-xl bg-paprika hover:bg-paprika-600 text-xs font-bold text-white transition-colors">
+                    S'inscrire
+                  </button>
+                </div>
+              </div>
+
+            </div>
+
+            <div className="pt-8 border-t border-charcoal-800 flex flex-col sm:flex-row items-center justify-between text-[11px] text-sand-400 gap-4">
+              <p>© 2026 Les Épices de Djouma. Tous droits réservés. Projet Stitch ID: 16048243715817667491</p>
+              <p className="flex items-center gap-2">
+                <span>Développé avec React, Node & GSAP</span>
+                <span>•</span>
+                <span>Haute Gastronomie</span>
+              </p>
+            </div>
+          </div>
+        </footer>
+      );
+    }
+
+    // Montage de l'application
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+</html>

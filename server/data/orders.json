@@ -1,0 +1,114 @@
+[
+  {
+    "id": "DJ-2026-8891",
+    "customer": {
+      "name": "Éléonore de Montmirail",
+      "email": "eleonore.montmirail@gastronomie.fr",
+      "phone": "+33 6 42 18 90 23",
+      "address": "14 Rue de Rivoli",
+      "city": "Paris",
+      "postalCode": "75001",
+      "country": "France"
+    },
+    "items": [
+      {
+        "spiceId": "melange-signature-djouma",
+        "name": "Mélange Signature Djouma",
+        "price": 14.50,
+        "quantity": 2,
+        "format": "Pot en verre fumé 80g"
+      },
+      {
+        "spiceId": "safran-taliouine-pur",
+        "name": "Or Rouge de Taliouine - Safran Pur",
+        "price": 28.50,
+        "quantity": 1,
+        "format": "Flacon hermétique 2g"
+      }
+    ],
+    "packaging": "Coffret Bois d'Acacia & Lin Gravé (+5.00€)",
+    "packagingFee": 5.00,
+    "shippingFee": 4.90,
+    "subtotal": 57.50,
+    "total": 67.40,
+    "status": "En préparation",
+    "paymentStatus": "Payé (Carte Bancaire)",
+    "createdAt": "2026-08-28T14:22:00Z",
+    "notes": "Commande cadeau : merci d'insérer le mot personnalisé 'Pour le grand dîner d'anniversaire'."
+  },
+  {
+    "id": "DJ-2026-8890",
+    "customer": {
+      "name": "Chef Alexandre Vianney",
+      "email": "a.vianney@restaurant-letoile.com",
+      "phone": "+33 6 99 82 11 05",
+      "address": "8 Quai des Célestins",
+      "city": "Lyon",
+      "postalCode": "69002",
+      "country": "France"
+    },
+    "items": [
+      {
+        "spiceId": "poivre-kampot-noir-reserve",
+        "name": "Poivre Noir de Kampot IGP Réserve",
+        "price": 18.00,
+        "quantity": 3,
+        "format": "Pot en verre 70g"
+      },
+      {
+        "spiceId": "cardamome-verte-guatemala",
+        "name": "Cardamome Verte Royale en Cosses",
+        "price": 16.50,
+        "quantity": 2,
+        "format": "Pot en verre 60g"
+      }
+    ],
+    "packaging": "Pochon en Lin Écologique",
+    "packagingFee": 0.00,
+    "shippingFee": 0.00,
+    "subtotal": 87.00,
+    "total": 87.00,
+    "status": "Expédiée",
+    "trackingNumber": "LP892304918FR",
+    "paymentStatus": "Payé (Virement Pro)",
+    "createdAt": "2026-08-27T09:15:00Z",
+    "notes": "Livraison matinale demandée avant le service de midi."
+  },
+  {
+    "id": "DJ-2026-8889",
+    "customer": {
+      "name": "Sabine Leroy",
+      "email": "sabine.leroy@artisanat.be",
+      "phone": "+32 470 12 34 56",
+      "address": "25 Avenue Louise",
+      "city": "Bruxelles",
+      "postalCode": "1050",
+      "country": "Belgique"
+    },
+    "items": [
+      {
+        "spiceId": "curcuma-alep-sauvage",
+        "name": "Curcuma Sauvage de Wayanad",
+        "price": 9.50,
+        "quantity": 2,
+        "format": "Sachet Kraft Hermétique 100g"
+      },
+      {
+        "spiceId": "zaatar-artisan-levant",
+        "name": "Za'atar Royal Sauvage & Sumac",
+        "price": 12.50,
+        "quantity": 1,
+        "format": "Sachet Kraft Hermétique 90g"
+      }
+    ],
+    "packaging": "Pochon en Lin Écologique",
+    "packagingFee": 0.00,
+    "shippingFee": 6.90,
+    "subtotal": 31.50,
+    "total": 38.40,
+    "status": "Livrée",
+    "paymentStatus": "Payé (Apple Pay)",
+    "createdAt": "2026-08-25T17:40:00Z",
+    "notes": "Client fidèle - 4ème commande."
+  }
+]
